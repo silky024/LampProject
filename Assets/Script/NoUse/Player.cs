@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public Animator animator;
     public Rigidbody2D rb;
     public BoxCollider2D boxcollider;
     public Vector3 moveDelta;
     public RaycastHit2D hit;
+    Vector2 movement;
 
     public void Start()
     {
@@ -17,11 +18,15 @@ public class PlayerMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
+
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
 
         //Reset moveDelta
-        moveDelta = new Vector3(x, y, 0);
+        moveDelta = new Vector3(movement.x, movement.y, 0);
 
         //Swap player direction
         if (moveDelta.x > 0)
@@ -41,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
             //Make this thing move
             transform.Translate(moveDelta.x * Time.deltaTime, 0, 0);
         }
-
+        rb.MovePosition(rb.position + movement * moveDelta * Time.fixedDeltaTime);
 
     }
 }
