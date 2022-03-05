@@ -10,7 +10,7 @@ public class Healing : Collectable
     {
         if (other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponent<HealthPoint>().HealingPlayer(20);
+            other.gameObject.GetComponent<HealthPoint>().Heal(20);
         }
     }
     protected override void Oncollect()

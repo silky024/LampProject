@@ -12,6 +12,18 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     public BoxCollider2D boxcollider;//test
 
+    [SerializeField] private float attackDelay = 0.5f;
+    [SerializeField] private GameObject attackFX;
+
+    // The hitboxes of our 4 different directions
+    [SerializeField] private GameObject hitBox_Top;
+    [SerializeField] private GameObject hitBox_Bottom;
+    [SerializeField] private GameObject hitBox_Left;
+    [SerializeField] private GameObject hitBox_Right;
+
+
+    [SerializeField] private bool canMove = true;
+
     public void Awake()
     {
         boxcollider = GetComponent<BoxCollider2D>();//test
@@ -21,11 +33,72 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
+        HandleAttack();
         HandleMovement();
+    }
+
+    public void PlayAttackFX(Transform loc)
+    {
+        if(attackFX)
+        {
+            Instantiate(attackFX, loc);
+            // sound fx
+        }
+    }
+
+    public void EnableAttackCollider()
+    {
+        if (animator.GetFloat("lastMoveX") == -1)
+        {
+            hitBox_Left.SetActive(true);
+        }
+        if (animator.GetFloat("lastMoveX") == 1)
+        {
+            hitBox_Right.SetActive(true);
+        }
+        if (animator.GetFloat("lastMoveY") == -1)
+        {
+            hitBox_Bottom.SetActive(true);
+        }
+        if (animator.GetFloat("lastMoveY") == 1)
+        {
+            hitBox_Top.SetActive(true);
+        }
+    }
+
+    public void DisableAllAttackCollider()
+    {
+        hitBox_Left.SetActive(false);
+        hitBox_Right.SetActive(false);
+        hitBox_Bottom.SetActive(false);
+        hitBox_Top.SetActive(false);
+    }
+
+    public void HandleAttack()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            if (canMove)
+            {
+                StartCoroutine(Attack());
+            }
+        }    
+    }
+
+    IEnumerator Attack()
+    {
+        animator.SetTrigger("Attack");
+        canMove = false;
+
+        // wait for 1 second after attack
+        yield return new WaitForSeconds(attackDelay);
+        canMove = true;
     }
 
     public void HandleMovement()
     {
+
+        
         float moveX = 0f;
         float moveY = 0f;
 
@@ -50,13 +123,13 @@ public class PlayerController : MonoBehaviour
 
         bool isIdle = moveX == 0 && moveY == 0;
         //animator.SetBool("IsMoving", !isIdle);
-        if (isIdle)
+        if (isIdle || !canMove)
         {
             //Idle
             rigidbody2D.velocity = Vector2.zero;
             animator.SetBool("IsMoving", false);
         }
-        else
+        else if (!isIdle && canMove)
         {
             //Moving
             lastMoveDir = moveDir;
@@ -64,6 +137,15 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Horizontal", moveDir.x);
             animator.SetFloat("Vertical", moveDir.y);
             animator.SetBool("IsMoving", true);
+
+            if (moveX == 1 || moveX == -1 || moveY == 1 || moveY == -1)
+            {
+                //if (canMove)
+                {
+                    animator.SetFloat("lastMoveX", moveX);
+                    animator.SetFloat("lastMoveY", moveY);
+                }
+            }
         }
 
     }

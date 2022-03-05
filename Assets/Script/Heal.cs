@@ -10,7 +10,7 @@ public class Heal : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            other.gameObject.GetComponent<HealthPoint>().HealingPlayer(10);
+            other.gameObject.GetComponent<HealthPoint>().Heal(10);
         }
         gameObject.SetActive(false);
     }

@@ -51,7 +51,7 @@ public class Enemy1 : MonoBehaviour
         {
             if (attackSpeed <= canAttack)
             {
-                other.gameObject.GetComponent<HealthPoint>().DamagePlayer(30);
+                other.gameObject.GetComponent<HealthPoint>().TakeDamage(30);
                 canAttack = 0f;
             }
             else

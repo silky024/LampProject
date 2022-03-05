@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class HealthPoint : MonoBehaviour
 {
-    public int curHealth = 0;
+    
     public int maxHealth = 100;
+    public int curHealth = 100;
 
     public HealthBar healthBar;
+
+    [SerializeField] private GameObject dieFX;
 
     void Start()
     {
         curHealth = maxHealth;
     }
 
-    public void UpdateHealth(int mod)
+    public void UpdateHealth()
     {
-        curHealth += mod;
 
         if (curHealth > maxHealth)
         {
@@ -25,20 +27,48 @@ public class HealthPoint : MonoBehaviour
         else if (curHealth <= 0)
         {
             curHealth = 0;
-            Debug.Log("Player Respawn");
+            Die();
         }
     }
-    public void DamagePlayer(int damage)
+    public void TakeDamage(int damage)
     {
         curHealth -= damage;
-
-        healthBar.SetHealth(curHealth);
+        UpdateHealth();
     }
 
-    public void HealingPlayer(int heal)
+    public void Heal(int heal)
     {
         curHealth += heal;
-        healthBar.SetHealth(curHealth);
+        UpdateHealth();
+    }
+
+    void UpdateHealthBar()
+    {
+
+        if (healthBar)
+            healthBar.SetHealth(curHealth);
+    }
+
+    public void Die()
+    {
+
+        if(dieFX)
+        {
+            Instantiate(dieFX, transform);
+
+            //disable rendering component
+            GetComponent<SpriteRenderer>().enabled = false;
+            GetComponent<CircleCollider2D>().enabled = false;
+
+            // then destroy the object after 1 sec
+            Destroy(gameObject, 1);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+            
     }
 
 }
