@@ -169,3 +169,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34dbd59354c0c56488f22019c559e129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healFX: {fileID: 4568621449396615745, guid: 836f721988a69e64b8c023130a7268dc, type: 3}

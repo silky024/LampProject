@@ -6,6 +6,7 @@ TagManager:
   tags:
   - platform
   - Enemy
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -40,11 +41,11 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
-    locked: 0
   - name: back
     uniqueID: 30751691
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0
   - name: front
     uniqueID: 2711020139

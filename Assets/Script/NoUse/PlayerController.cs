@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private bool canMove = true;
 
+    public bool CanMove { get => canMove; set => canMove = value; }
+
     public void Awake()
     {
         boxcollider = GetComponent<BoxCollider2D>();//test
@@ -42,6 +44,15 @@ public class PlayerController : MonoBehaviour
         if(attackFX)
         {
             Instantiate(attackFX, loc);
+            // sound fx
+        }
+    }
+
+    public void PlayFX(GameObject fx)
+    {
+        if (fx)
+        {
+            Instantiate(fx, transform);
             // sound fx
         }
     }
@@ -78,21 +89,28 @@ public class PlayerController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if (canMove)
+            if (CanMove)
             {
                 StartCoroutine(Attack());
             }
-        }    
+        }
+        else if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (CanMove)
+            {
+                GetComponent<UltimateSkill>().Use();
+            }
+        }
     }
 
     IEnumerator Attack()
     {
         animator.SetTrigger("Attack");
-        canMove = false;
+        CanMove = false;
 
         // wait for 1 second after attack
         yield return new WaitForSeconds(attackDelay);
-        canMove = true;
+        CanMove = true;
     }
 
     public void HandleMovement()
@@ -123,13 +141,13 @@ public class PlayerController : MonoBehaviour
 
         bool isIdle = moveX == 0 && moveY == 0;
         //animator.SetBool("IsMoving", !isIdle);
-        if (isIdle || !canMove)
+        if (isIdle || !CanMove)
         {
             //Idle
             rigidbody2D.velocity = Vector2.zero;
             animator.SetBool("IsMoving", false);
         }
-        else if (!isIdle && canMove)
+        else if (!isIdle && CanMove)
         {
             //Moving
             lastMoveDir = moveDir;
