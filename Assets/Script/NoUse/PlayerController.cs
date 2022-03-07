@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
 
     public void HandleAttack()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (CanMove)
             {
