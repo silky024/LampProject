@@ -8,6 +8,7 @@ public class UltimateSkill : MonoBehaviour
     [SerializeField] float chargeTime = 2.0f;
     [SerializeField] float activeTime = 1.0f;
 
+    [SerializeField] GameObject lightFX;
     [SerializeField] GameObject chargeFX;
     [SerializeField] GameObject activeFX;
     [SerializeField] GameObject finishFX;
@@ -33,19 +34,25 @@ public class UltimateSkill : MonoBehaviour
         
         player.CanMove = false; // prevent from moving
 
+        //--- Charging...
         GetComponent<Animator>().SetTrigger("ulti_charge");
         GameObject p1 = Instantiate(chargeFX, transform);
+
+        yield return new WaitForSeconds(0.2f);
+        lightFX.SetActive(true);
         yield return new WaitForSeconds( chargeTime );
         Destroy(p1);
 
-        //if (!player.CanMove) yield return null; // it is interrupted.
-        
+
+        //--- Active!...
         GetComponent<Animator>().SetTrigger("ulti_active");
         GameObject p2 = Instantiate(activeFX, transform);
         damageCollider.SetActive(true);
         yield return new WaitForSeconds(activeTime);
 
 
+        //--- Finially...
+        lightFX.SetActive(false);
         player.CanMove = true;
         damageCollider.SetActive(false);
         Instantiate(finishFX, transform);
